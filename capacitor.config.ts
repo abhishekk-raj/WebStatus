@@ -4,7 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.techoutopia.webstatus',
   appName: 'WebStatus',
   webDir: 'build',
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  plugins: {
+    LocalNotifications: {
+      smallIcon: 'ic_stat_status_icon_17',
+      iconColor: '#ffffff'
+    }
+  }
 };
 
 export default config;
