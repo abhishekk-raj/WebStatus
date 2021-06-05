@@ -1177,6 +1177,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capacitor/local-notifications@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/local-notifications/-/local-notifications-1.0.0.tgz#88d749117b67b2349f84dcb778047ce3d3e7fc3a"
+  integrity sha512-tewtNmRR7BSYxXmDB7KzSqQgDobnRQt0pdjG+NVk5Uu7QNURnli3QskH1hK2dVbsgZhE7DNxm7y+2IMGqBhnbA==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
