@@ -1,0 +1,19 @@
+.WebsiteDetails {
+  height: calc(100vh - 3.5rem);
+}
+
+.CardBody {
+  font-size: 0.9rem;
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .red {
+    color: darkred;
+  }
+
+  .green {
+    color: darkgreen;
+  }
+}

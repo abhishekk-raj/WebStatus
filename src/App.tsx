@@ -7,7 +7,10 @@ function App() {
     return (
         <div className="App">
             <Appbar/>
-            <WebsiteDetail/>
+            <WebsiteDetail
+                websiteName='SmartSoul'
+                websiteUrl='https://smartsoul.com'
+            />
         </div>
     );
 }
