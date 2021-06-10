@@ -9,7 +9,7 @@ function App() {
             <Appbar/>
             <WebsiteDetail
                 websiteName='SmartSoul'
-                websiteUrl='https://smartsoul.com'
+                websiteUrl='https://smartsoul.com/'
             />
         </div>
     );

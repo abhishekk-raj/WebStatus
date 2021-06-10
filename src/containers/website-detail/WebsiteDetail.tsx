@@ -23,36 +23,47 @@ const WebsiteDetail: FunctionComponent<WebsiteDetailProps> = ({websiteName, webs
         LocalNotifications.requestPermissions()
             .then((permissionStatus: PermissionStatus) => {
                 console.log(permissionStatus.display);
-            })
-    }, [])
+            });
+        checkWebsiteStatus().then(() => {
+            console.log('Calling first time');
+        })
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const checkWebsiteStatus = async () => {
         if (!navigator.onLine) {
             setStatus(networkStatus.NetworkFail);
             return;
         }
-        await fetch(websiteUrl, {mode: 'no-cors'})
-            .then((res) => {
-                setStatus(networkStatus.Active);
-                scheduleNotification(websiteName, 'Website is up and running');
-            }).catch((err) => {
-                setStatus(networkStatus.Inactive);
-                scheduleNotification(websiteName, 'Aww!! Website has stopped running');
-            })
+        await fetch(websiteUrl, {
+            mode: 'no-cors',
+            method: 'GET',
+            cache: 'no-cache'
+        }).then((res: Response) => {
+            setStatus(networkStatus.Active);
+            scheduleNotification(`${websiteName} is up and running`);
+        }).catch((err) => {
+            setStatus(networkStatus.Inactive);
+            scheduleNotification(`Aww!! ${websiteName} has stopped running`);
+        });
     }
 
     useEffect(() => {
         const interval = setInterval(() => {
-            checkWebsiteStatus();
+            checkWebsiteStatus()
+                .then((res) => {
+                    console.log('Calling after 30 min');
+                }).catch(err => {
+                console.log(err)
+            })
         }, 1000 * 60 * 30);
 
         return () => clearInterval(interval);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const scheduleNotification = async (title: string, body: string) => {
+    const scheduleNotification = async (body: string) => {
         await LocalNotifications.schedule({
             notifications: [{
-                title: title,
+                title: 'Web Status',
                 body: body,
                 id: 1,
             }]
@@ -76,7 +87,7 @@ const WebsiteDetail: FunctionComponent<WebsiteDetailProps> = ({websiteName, webs
                         </tr>
                         <tr>
                             <td>Status</td>
-                            <td className={`${status === networkStatus.Active? styles.green: styles.red} ${styles.bold}`}>{status}</td>
+                            <td className={`${status === networkStatus.Active ? styles.green : styles.red} ${styles.bold}`}>{status}</td>
                         </tr>
                         </tbody>
                     </Table>
