@@ -1,64 +1,29 @@
-import React, {FunctionComponent, useEffect, useState} from 'react';
-import {Card, CardBody, CardHeader, Table} from "reactstrap";
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Card, CardBody, CardHeader, Table } from "reactstrap";
 
 import styles from './WebsiteDetail.module.scss';
-import {LocalNotifications, PermissionStatus} from "@capacitor/local-notifications";
+import { LocalNotifications, PermissionStatus } from "@capacitor/local-notifications";
+import useGetWebDetail from '../../hooks/use-get-web-detail';
+import { getWebsiteName } from '../../methods/get-website-name';
+import { WebsiteStatus, getWebsiteStatus } from '../../methods/get-website-status';
+import { useParams } from 'react-router-dom';
+import useGetWebsite from '../../hooks/use-get-website';
 
-type WebsiteDetailProps = {
-    websiteName: string;
-    websiteUrl: string;
-}
+const WebsiteDetail: FunctionComponent = () => {
+    const [webStatus, setWebStatus] = useState<WebsiteStatus>();
+    // const [websiteUrl, setWebsiteUrl] = useState('https://master.smartsoul.com/user/list');
+    const { websiteId } = useParams();
+    const website = useGetWebsite('websiteDetails', websiteId!);
+    const { data, error } = useGetWebDetail(website?.name);
 
-enum networkStatus {
-    NetworkFail = 'Internet connection error',
-    Active = 'Active',
-    Inactive = 'Inactive'
-}
-
-const WebsiteDetail: FunctionComponent<WebsiteDetailProps> = ({websiteName, websiteUrl}: WebsiteDetailProps) => {
-
-    const [status, setStatus] = useState('Fetching...');
+    console.log(website);
 
     useEffect(() => {
-        LocalNotifications.requestPermissions()
-            .then((permissionStatus: PermissionStatus) => {
-                console.log(permissionStatus.display);
-            });
-        checkWebsiteStatus().then(() => {
-            console.log('Calling first time');
-        })
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const checkWebsiteStatus = async () => {
-        if (!navigator.onLine) {
-            setStatus(networkStatus.NetworkFail);
-            return;
+        if (data) {
+            const websiteStatus = getWebsiteStatus(data.status, 'error' in data ? data.error : undefined);
+            setWebStatus(websiteStatus);
         }
-        await fetch(websiteUrl, {
-            mode: 'no-cors',
-            method: 'GET',
-            cache: 'no-cache'
-        }).then((res: Response) => {
-            setStatus(networkStatus.Active);
-            scheduleNotification(`${websiteName} is up and running`);
-        }).catch((err) => {
-            setStatus(networkStatus.Inactive);
-            scheduleNotification(`Aww!! ${websiteName} has stopped running`);
-        });
-    }
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            checkWebsiteStatus()
-                .then((res) => {
-                    console.log('Calling after 30 min');
-                }).catch(err => {
-                console.log(err)
-            })
-        }, 1000 * 60 * 30);
-
-        return () => clearInterval(interval);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [data]);
 
     const scheduleNotification = async (body: string) => {
         await LocalNotifications.schedule({
@@ -75,22 +40,32 @@ const WebsiteDetail: FunctionComponent<WebsiteDetailProps> = ({websiteName, webs
             <Card className="w-100">
                 <CardHeader className="d-flex">Website Status</CardHeader>
                 <CardBody className={styles.CardBody}>
-                    <Table bordered>
-                        <tbody>
-                        <tr>
-                            <td>Name</td>
-                            <td>{websiteName}</td>
-                        </tr>
-                        <tr>
-                            <td>Url</td>
-                            <td><a href={websiteUrl} target='_blank' rel='noreferrer'>{websiteUrl}</a></td>
-                        </tr>
-                        <tr>
-                            <td>Status</td>
-                            <td className={`${status === networkStatus.Active ? styles.green : styles.red} ${styles.bold}`}>{status}</td>
-                        </tr>
-                        </tbody>
-                    </Table>
+                    {
+                        data ? (
+                            <Table bordered>
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>{getWebsiteName('url' in data ? data.url : website.name)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Url</td>
+                                        <td>
+                                            <a href={website.name} target='_blank' rel='noreferrer'>{'url' in data ? data.url : website.name}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td className={`${styles.bold}`} style={{ color: webStatus?.color }}>
+                                            {webStatus?.message}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        ) : (
+                            <div>{error instanceof Error ? error.message : 'Getting Details...'}</div>
+                        )
+                    }
                 </CardBody>
             </Card>
         </div>
