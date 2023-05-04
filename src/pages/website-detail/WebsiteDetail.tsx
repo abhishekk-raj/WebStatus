@@ -2,7 +2,6 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, Table } from "reactstrap";
 
 import styles from './WebsiteDetail.module.scss';
-import { LocalNotifications, PermissionStatus } from "@capacitor/local-notifications";
 import useGetWebDetail from '../../hooks/use-get-web-detail';
 import { getWebsiteName } from '../../methods/get-website-name';
 import { WebsiteStatus, getWebsiteStatus } from '../../methods/get-website-status';
@@ -23,16 +22,6 @@ const WebsiteDetail: FunctionComponent = () => {
             updateWebsiteDetailsToDB('websiteDetails', websiteId!, data.status);
         }
     }, [data]);
-
-    const scheduleNotification = async (body: string) => {
-        await LocalNotifications.schedule({
-            notifications: [{
-                title: 'Web Status',
-                body: body,
-                id: 1,
-            }]
-        })
-    }
 
     return (
         <div className={`container d-flex align-items-center justify-content-center ${styles.WebsiteDetails}`}>

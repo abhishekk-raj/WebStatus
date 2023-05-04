@@ -16,7 +16,7 @@ const AddWebsite = () => {
         saveWebsiteDetailsToDB('websiteDetails', {
             id: getRandomId(),
             name: websiteUrl,
-            status: 'active',
+            status: '200',
             lastUpdated: new Date().toISOString()
         });
         useNaviagte('/');
