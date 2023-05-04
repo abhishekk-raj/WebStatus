@@ -1,5 +1,5 @@
 export interface WebError {
-    error: any;
-    status: number;
-    message?: string;
+  error: any;
+  status: number;
+  message?: string;
 }

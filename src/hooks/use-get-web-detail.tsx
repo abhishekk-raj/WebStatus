@@ -1,29 +1,31 @@
-import { useState, useEffect } from 'react';
-import { WebDetail } from '../types/web-detail';
-import { WebError } from '../types/web-error';
+import { useState, useEffect } from "react";
+import { WebDetail } from "../types/web-detail";
+import { WebError } from "../types/web-error";
 
+const useGetWebDetail = (
+  url: string
+): { data: WebDetail | WebError; error: WebError | Error | unknown } => {
+  const [data, setData] = useState<any | null>(null);
+  const [error, setError] = useState<Error | WebError | unknown>();
 
-const useGetWebDetail = (url: string): { data: WebDetail | WebError, error: WebError | Error | unknown } => {
-    const [data, setData] = useState<any | null>(null);
-    const [error, setError] = useState<Error | WebError | unknown>();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response: Response = await fetch(
+          `https://api.web-status.techoutopia.com/?url=${url}`,
+          { method: "GET", cache: "no-cache" }
+        );
+        const apiResponse = await response.json();
+        setData(apiResponse);
+      } catch (error) {
+        setError(error);
+      }
+    };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response: Response = await fetch(
-                    `https://api.web-status.techoutopia.com/?url=${url}`,
-                    { method: 'GET', cache: 'no-cache' });
-                const apiResponse = await response.json();
-                setData(apiResponse);
-            } catch (error) {
-                setError(error);
-            }
-        };
+    fetchData();
+  }, [url]);
 
-        fetchData();
-    }, [url]);
-
-    return { data, error };
+  return { data, error };
 };
 
 export default useGetWebDetail;
