@@ -6,21 +6,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./components/error/error";
 import WebsiteList from "./pages/website-list/WebsiteList";
 import AddWebsite from "./pages/add-website/AddWebsite";
+import { Routes } from "./utils/constants";
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: Routes.Empty,
       element: <WebsiteList />,
       errorElement: <ErrorPage />,
     },
     {
-      path: ":websiteId",
+      path: Routes.WebsiteDetail,
       element: <WebsiteDetail />,
       errorElement: <ErrorPage />,
     },
     {
-      path: "/add-website",
+      path: Routes.AddWebsite,
       element: <AddWebsite />,
       errorElement: <ErrorPage />,
     },
