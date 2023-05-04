@@ -9,10 +9,8 @@ const useProxy = (url: string): { data: any | null, error: Error | unknown } => 
             try {
                 const response = await fetch(`/api?url=${url}`);
                 setData(await response.json());
-                console.log(data);
             } catch (error) {
                 setError(error);
-                console.log(error);
             }
         };
 

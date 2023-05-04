@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import saveWebsiteDetailsToDB from '../../methods/save-web-detail';
 import { getRandomId } from '../../methods/get-random-id';
+import { useNavigate } from 'react-router-dom';
 
 const AddWebsite = () => {
     const [websiteUrl, setWebsiteUrl] = useState('');
+    const useNaviagte = useNavigate();
 
     const onInputChange = (e: any) => {
         setWebsiteUrl(e.target.value);
@@ -11,8 +13,13 @@ const AddWebsite = () => {
 
     const onFormSubmit = (e: any) => {
         e.preventDefault();
-        console.log(websiteUrl);
-        saveWebsiteDetailsToDB('websiteDetails', { id: getRandomId(), name: websiteUrl });
+        saveWebsiteDetailsToDB('websiteDetails', {
+            id: getRandomId(),
+            name: websiteUrl,
+            status: 'active',
+            lastUpdated: new Date().toISOString()
+        });
+        useNaviagte('/');
     };
 
     return (

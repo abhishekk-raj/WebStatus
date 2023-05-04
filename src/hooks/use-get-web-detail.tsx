@@ -15,10 +15,8 @@ const useGetWebDetail = (url: string): { data: WebDetail | WebError, error: WebE
                     { method: 'GET', cache: 'no-cache' });
                 const apiResponse = await response.json();
                 setData(apiResponse);
-                console.log(apiResponse);
             } catch (error) {
                 setError(error);
-                console.log(error);
             }
         };
 
