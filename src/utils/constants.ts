@@ -1,8 +1,9 @@
-const Routes = {
+const RouteNames = {
   Empty: "/",
   Auth: "/auth",
   AddWebsite: "/add-website",
-  WebsiteDetail: ":websiteId",
+  WebsiteList: "/websites",
+  WebsiteDetail: "websites/:websiteId",
 };
 
-export { Routes };
+export { RouteNames };
