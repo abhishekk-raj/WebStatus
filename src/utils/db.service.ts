@@ -1,5 +1,5 @@
-import { UserCredential, signInWithPopup } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { User, UserCredential, signInWithPopup } from "firebase/auth";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 
 import { auth, db, provider } from "./firebase";
 import { Web } from "../types/web";
@@ -17,4 +17,19 @@ const saveWebsiteDetails = async (websiteDetails: Web) => {
   return await setDoc(docRef, websiteDetails);
 };
 
-export { signInWithGoogle, saveWebsiteDetails };
+const getWebsiteList = async (user: User): Promise<Web[]> => {
+  const websiteDetailsCollection = collection(
+    db,
+    "users",
+    user!.uid,
+    "websites"
+  );
+  const websiteDetailsSnapshot = await getDocs(websiteDetailsCollection);
+  const websiteDetailsList = websiteDetailsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  return websiteDetailsList as Web[];
+};
+
+export { signInWithGoogle, saveWebsiteDetails, getWebsiteList };

@@ -1,11 +1,14 @@
 import React from "react";
-import useGetWebsiteList from "../../hooks/use-get-website-list";
 import { Link } from "react-router-dom";
-import { getWebsiteName } from "../../methods/get-website-name";
 import { Badge, ListGroup, ListGroupItem } from "reactstrap";
 
+import { getWebsiteName } from "../../methods/get-website-name";
+import useGetWebsiteListFirestore from "../../hooks/use-get-website-list-fs";
+import { useAuth } from "../../context/auth-provider";
+
 const WebsiteList = () => {
-  const websiteList = useGetWebsiteList("websiteDetails");
+  const { user } = useAuth();
+  const websiteList = useGetWebsiteListFirestore(user);
 
   return (
     <div>
@@ -25,7 +28,7 @@ const WebsiteList = () => {
             <ListGroup className="ms-5 me-5 mt-2">
               <ListGroupItem>
                 <Link to={website.id} className="d-flex align-items-center">
-                  <h6>{getWebsiteName(website.name)}</h6>
+                  <h6>{getWebsiteName(website.url)}</h6>
                   <Badge
                     className="ms-auto"
                     color={

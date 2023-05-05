@@ -1,22 +1,23 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Table } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Card, CardBody, CardHeader, Table } from "reactstrap";
+import { Link, useParams } from "react-router-dom";
 
 import styles from "./WebsiteDetail.module.scss";
 import useGetWebDetail from "../../hooks/use-get-web-detail";
-import { getWebsiteName } from "../../methods/get-website-name";
 import {
   WebsiteStatus,
   getWebsiteStatus,
 } from "../../methods/get-website-status";
-import { Link, useParams } from "react-router-dom";
-import useGetWebsite from "../../hooks/use-get-website";
 import updateWebsiteDetailsToDB from "../../methods/update-web-details";
+import { useAuth } from "../../context/auth-provider";
+import useGetWebsiteDetailFirestore from "../../hooks/use-get-website-detail-fs";
 
-const WebsiteDetail: FunctionComponent = () => {
+const WebsiteDetail = () => {
   const [webStatus, setWebStatus] = useState<WebsiteStatus>();
   const { websiteId } = useParams();
-  const website = useGetWebsite("websiteDetails", websiteId!);
-  const { data, error } = useGetWebDetail(website?.name);
+  const { user } = useAuth();
+  const website = useGetWebsiteDetailFirestore(user, websiteId!);
+  const { data, error } = useGetWebDetail(website.url);
 
   useEffect(() => {
     if (data) {
@@ -42,15 +43,13 @@ const WebsiteDetail: FunctionComponent = () => {
                 <tbody>
                   <tr>
                     <td>Name</td>
-                    <td>
-                      {getWebsiteName("url" in data ? data.url : website.name)}
-                    </td>
+                    <td>{website.name}</td>
                   </tr>
                   <tr>
                     <td>Url</td>
                     <td>
                       <a href={website.name} target="_blank" rel="noreferrer">
-                        {"url" in data ? data.url : website.name}
+                        {website.url}
                       </a>
                     </td>
                   </tr>
