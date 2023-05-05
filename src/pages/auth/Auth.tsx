@@ -12,12 +12,7 @@ const Auth = () => {
   const { setUser } = useAuth();
   const useNaviagte = useNavigate();
 
-  if (loading) {
-    console.log("loading", loading);
-  }
-
   if (userCredential) {
-    console.log("userCredential", userCredential);
     setUser(userCredential.user);
     useNaviagte(RouteNames.WebsiteList);
   }

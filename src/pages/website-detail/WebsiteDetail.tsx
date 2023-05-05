@@ -11,6 +11,8 @@ import {
 import updateWebsiteDetailsToDB from "../../methods/update-web-details";
 import { useAuth } from "../../context/auth-provider";
 import useGetWebsiteDetailFirestore from "../../hooks/use-get-website-detail-fs";
+import { updateWebsiteDetails } from "../../utils/db.service";
+import { Web } from "../../types/web";
 
 const WebsiteDetail = () => {
   const [webStatus, setWebStatus] = useState<WebsiteStatus>();
@@ -26,7 +28,21 @@ const WebsiteDetail = () => {
         "error" in data ? data.error : undefined
       );
       setWebStatus(websiteStatus);
-      updateWebsiteDetailsToDB("websiteDetails", websiteId!, data.status);
+      // updateWebsiteDetailsToDB("websiteDetails", websiteId!, data.status);
+      const dataToUpdate: Web = {
+        id: website.id,
+        name: website.name,
+        url: website.url,
+        status: data.status.toString(),
+        lastUpdated: new Date().toISOString(),
+      };
+      updateWebsiteDetails(user.uid, website.id, dataToUpdate)
+        .then(() => {
+          console.log("Updated Successfully!");
+        })
+        .catch((error) => {
+          console.log("Error occurred while updating: ", error);
+        });
     }
   }, [data]);
 

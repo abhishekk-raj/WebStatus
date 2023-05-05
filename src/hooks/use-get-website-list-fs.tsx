@@ -7,7 +7,6 @@ import { User } from "firebase/auth";
 
 const useGetWebsiteListFirestore = (user: User) => {
   const [websiteDetailsList, setWebsiteDetailsList] = useState<Web[]>([]);
-  console.log("Called");
 
   useEffect(() => {
     const fetchData = async () => {

@@ -20,11 +20,7 @@ const useGetWebsiteDetailFirestore = (user: User, websiteId: string) => {
     const fetchData = async () => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
-
         setWebsiteDetails(docSnap.data() as Web);
-      } else {
-        console.log("No such document!");
       }
     };
 

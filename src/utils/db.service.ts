@@ -1,5 +1,11 @@
 import { User, UserCredential, signInWithPopup } from "firebase/auth";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 import { auth, db, provider } from "./firebase";
 import { Web } from "../types/web";
@@ -17,6 +23,16 @@ const saveWebsiteDetails = async (websiteDetails: Web) => {
   return await setDoc(docRef, websiteDetails);
 };
 
+const updateWebsiteDetails = async (
+  userId: string,
+  websiteId: string,
+  newData: any
+) => {
+  const userDocRef = doc(db, "users", userId, "websites", websiteId);
+
+  return await updateDoc(userDocRef, newData);
+};
+
 const getWebsiteList = async (user: User): Promise<Web[]> => {
   const websiteDetailsCollection = collection(
     db,
@@ -32,4 +48,9 @@ const getWebsiteList = async (user: User): Promise<Web[]> => {
   return websiteDetailsList as Web[];
 };
 
-export { signInWithGoogle, saveWebsiteDetails, getWebsiteList };
+export {
+  signInWithGoogle,
+  saveWebsiteDetails,
+  getWebsiteList,
+  updateWebsiteDetails,
+};
