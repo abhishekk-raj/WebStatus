@@ -6,11 +6,11 @@ function PrivateRoute() {
   const { user } = useAuth();
   console.log("user: ", user);
 
-  if (user === null || user === undefined || Object.keys(user).length === 0) {
-    return <Navigate to={RouteNames.Auth} />;
-  }
+  // if (user === undefined) {
+  //   return null;
+  // }
 
-  return <Outlet />;
+  return user ? <Outlet /> : <Navigate to={RouteNames.Auth} />;
 }
 
 export default PrivateRoute;
