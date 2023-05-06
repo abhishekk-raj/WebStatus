@@ -4,8 +4,9 @@ import { useAuth } from "../context/auth-provider";
 
 function PrivateRoute() {
   const { user } = useAuth();
+  console.log("user: ", user);
 
-  if (user.uid === undefined) {
+  if (Object.keys(user).length === 0) {
     return null;
   }
 
