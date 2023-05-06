@@ -7,10 +7,10 @@ function PrivateRoute() {
   console.log("user: ", user);
 
   if (user === null || Object.keys(user).length === 0) {
-    return null;
+    return <Navigate to={RouteNames.Auth} />;
   }
 
-  return user ? <Outlet /> : <Navigate to={RouteNames.Auth} />;
+  return <Outlet />;
 }
 
 export default PrivateRoute;
